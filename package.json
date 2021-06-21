@@ -11,7 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "*",
     "express": "^4.17.1",
-    "puppeteer": "^9.0.0"
+    "mongoose": "^5.12.7",
+    "puppeteer": "^9.0.0",
+    "qs": "^6.7.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1"
   }
 }
