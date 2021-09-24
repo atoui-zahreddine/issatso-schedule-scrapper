@@ -47,7 +47,11 @@ async function getMajorScheduleHtmlPage(id) {
 function extractScheduleFromThePage(html) {
   const $ = cheerio.load(html);
   const result = [];
-  $("#dvContainer > table > tbody > tr").each(function () {
+  // table can be null => throw error
+  if($("#dvContainer > table > tbody > tr").length){
+    throw new Error("Schedule scrapping failed")
+  }
+  $("#dvContainer > table > tbody > tr")?.each(function () {
     let row = [];
     $(this)
       .children()
@@ -82,10 +86,9 @@ function parseExtractedDataToJson(schedule) {
         start: row[1],
         end: row[2],
         desc: row[3],
-        professor: row[4],
-        type: row[5],
-        classroom: row[6],
-        regime: row[7],
+        type: row[4],
+        classroom: row[5],
+        regime: row[6],
       };
       refactoredSchedule[subGroup][day].push(daySessions);
     }
@@ -93,13 +96,17 @@ function parseExtractedDataToJson(schedule) {
   return refactoredSchedule;
 }
 
-module.exports.getScheduleByMajorId = async function (majorId) {
-  const html = await getMajorScheduleHtmlPage(majorId);
-  const extractedSchedule = extractScheduleFromThePage(html);
-  return parseExtractedDataToJson(extractedSchedule);
+const getScheduleByMajorId = async function (majorId) {
+  try {
+    const html = await getMajorScheduleHtmlPage(majorId);
+    const extractedSchedule = extractScheduleFromThePage(html);
+    return parseExtractedDataToJson(extractedSchedule);
+  }catch (e){
+    throw new Error(e.message);
+  }
 };
 
-module.exports.getAllMajors = async function () {
+const getAllMajors = async function () {
   const { htmlPage } = await loadHtml(
     "http://www.issatso.rnu.tn/fo/emplois/emploi_groupe.php"
   );
@@ -110,5 +117,7 @@ module.exports.getAllMajors = async function () {
       majors.push({ id: $(this).val(), label: $(this).text() });
     }
   );
-  return majors
+  return majors;
 };
+
+module.exports={getAllMajors,getScheduleByMajorId}

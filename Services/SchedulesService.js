@@ -1,28 +1,31 @@
-const {Major} = require('../Models/Major')
+const { Major } = require("../Models/Major");
 
-const {sleep} = require('../Utils')
-const {getAllMajors,getScheduleByMajorId} = require('./ScrapingService')
-
-
+const { sleep } = require("../Utils");
+const { getAllMajors, getScheduleByMajorId } = require("./ScrapingService");
 
 async function saveAllMajorsSchedule() {
-    let majors = await getAllMajors()
-    for (let major of majors) {
-        try {
-            const schedule = await getScheduleByMajorId(major.id)
-            const savedMajor = new Major({
-                majorId:major.id,
-                label:major.label,
-                schedule
-            })
-            await Major.findOneAndUpdate({majorId:major.id},savedMajor,{upsert:true,useFindAndModify:false})
-            console.log(`major ${major.label} saved successfully .`)
-            await sleep(1000)
-        }catch (e) {
-            console.log(`error while saving ${major.label} to db !!!`+e)
-        }
+  let majors = await getAllMajors();
+  for (let major of majors) {
+    try {
+      const schedule = await getScheduleByMajorId(major.id);
+      await Major.findOneAndUpdate(
+        { majorId: major.id },
+        {
+          $set: {
+            schedule,
+            label:major.label,
+            updatedOn: new Date(),
+          },
+        },
+        { upsert: true, useFindAndModify: false }
+      );
+      console.log(`major ${major.label} saved successfully .`);
+      await sleep(1000);
+    } catch (e) {
+      console.log(`error while saving ${major.label} to db !!! ${e.message}`);
+
     }
+  }
 }
 
-
-module.exports.saveAllMajorsSchedule = saveAllMajorsSchedule
+module.exports = { saveAllMajorsSchedule };

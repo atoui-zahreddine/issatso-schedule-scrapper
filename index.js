@@ -1,17 +1,17 @@
 const  express =  require('express');
 
 
-const schedulesRoute = require('./Routes/schedules')
-const scheduleService = require("./Services/SchedulesService")
+const majorsRoute = require('./Routes/majors')
 require('./Startup/db')()
-
+require('./Startup/events')()
 
 const app = express()
 const port = process.env.PORT || 3000
 
 
-app.use('/schedules',schedulesRoute)
+app.use('/api/v1/majors',majorsRoute)
 
-// scheduleService.saveAllMajorsSchedule()
+
+
 
 app.listen(port,() => console.log(`listening on port ${port}`))
