@@ -1,0 +1,4 @@
+{
+  "DB_URL":"DB_URL",
+  "SCRAPING_CRON":"SCRAPING_CRON"
+}

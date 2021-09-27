@@ -48,10 +48,11 @@ function extractScheduleFromThePage(html) {
   const $ = cheerio.load(html);
   const result = [];
   // table can be null => throw error
-  if($("#dvContainer > table > tbody > tr").length){
-    throw new Error("Schedule scrapping failed")
+  const scheduleTable = $("#dvContainer > table > tbody > tr");
+  if (!scheduleTable.length) {
+    throw new Error("Schedule scrapping failed");
   }
-  $("#dvContainer > table > tbody > tr")?.each(function () {
+  scheduleTable.each(function () {
     let row = [];
     $(this)
       .children()
@@ -77,12 +78,12 @@ function parseExtractedDataToJson(schedule) {
   schedule.forEach((row) => {
     if (row[0].match(/.*-.*-2/)) {
       subGroup = "2";
-    } else if (row[0].match(/^[1,2,3,4,5,6]-/)) {
+    } else if (row[0].match(/^[123456]-/)) {
       day = row[0];
-      refactoredSchedule[subGroup][day] = [];
+      refactoredSchedule[subGroup][day] = {};
     } else {
-      let daySessions = {
-        session: row[0],
+
+      let session = {
         start: row[1],
         end: row[2],
         desc: row[3],
@@ -90,7 +91,7 @@ function parseExtractedDataToJson(schedule) {
         classroom: row[5],
         regime: row[6],
       };
-      refactoredSchedule[subGroup][day].push(daySessions);
+      refactoredSchedule[subGroup][day][row[0]]=session;
     }
   });
   return refactoredSchedule;
@@ -101,7 +102,7 @@ const getScheduleByMajorId = async function (majorId) {
     const html = await getMajorScheduleHtmlPage(majorId);
     const extractedSchedule = extractScheduleFromThePage(html);
     return parseExtractedDataToJson(extractedSchedule);
-  }catch (e){
+  } catch (e) {
     throw new Error(e.message);
   }
 };
@@ -112,12 +113,14 @@ const getAllMajors = async function () {
   );
   const $ = cheerio.load(htmlPage);
   const majors = [];
-  $("#form1 > table > tbody > tr > td:nth-child(2) > select > option").each(
-    function () {
-      majors.push({ id: $(this).val(), label: $(this).text() });
-    }
+  const majorList = $(
+    "#form1 > table > tbody > tr > td:nth-child(2) > select > option"
   );
+  if (!majorList.length) throw new Error("error getting majors list .");
+  majorList.each(function () {
+    majors.push({ id: $(this).val(), label: $(this).text() });
+  });
   return majors;
 };
 
-module.exports={getAllMajors,getScheduleByMajorId}
+module.exports = { getAllMajors, getScheduleByMajorId };

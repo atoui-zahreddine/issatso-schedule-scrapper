@@ -1,0 +1,4 @@
+{
+  "DB_URL":"mongodb://localhost:27017/issatso-majors-db",
+  "SCRAPING_CRON":"59 23 * * 5"
+}
