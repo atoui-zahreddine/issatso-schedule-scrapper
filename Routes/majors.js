@@ -1,6 +1,6 @@
 const express = require('express')
  
-const { saveAllMajorsSchedule } = require("../Services/SchedulesService");
+const { updateAllMajorsSchedule } = require("../Services/SchedulesService");
 const {Major}  =require("../Models/Major")
 
 const router = express.Router()
@@ -19,7 +19,7 @@ router.get('', async (req, res) => {
 
 router.patch("/scrape-majors-schedule", (async (req,res) => {
   try {
-      await saveAllMajorsSchedule()
+      await updateAllMajorsSchedule()
       res.status(200)
   } catch (e) {
       console.log(e.message)
