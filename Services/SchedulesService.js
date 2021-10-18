@@ -32,7 +32,7 @@ async function saveAllMajorsSchedule() {
       }
     }
   } catch (e) {
-    console.log(e.message);
+    console.log('error whiles saving majors :', e);
   }
 }
 
@@ -65,7 +65,7 @@ async function updateAllMajorsSchedule() {
       }
     }
   } catch (e) {
-    console.log(e.message);
+    console.log('error whiles updating majors :', e);
   }
 }
 

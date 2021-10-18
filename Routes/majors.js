@@ -10,7 +10,8 @@ const router = express.Router();
 
 router.get('', async (req, res) => {
   try {
-    res.status(200).json(await Major.find().select({ majorId: 1, label: 1 }));
+    const majors = await Major.find().select({ majorId: 1, label: 1 });
+    res.status(200).json(majors);
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: 'server error' });
