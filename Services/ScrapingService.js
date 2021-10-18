@@ -126,7 +126,6 @@ const getScheduleValidity = async () => {
   const { htmlPage } = await loadHtml(
     'http://www.issatso.rnu.tn/fo/emplois/emploi_groupe.php'
   );
-  console.log(htmlPage);
   const $ = cheerio.load(htmlPage);
   // schedule validity example : à partir de: 19-10-2021
   const scheduleValidity = $(
@@ -136,8 +135,5 @@ const getScheduleValidity = async () => {
     .trim();
   return scheduleValidity.split(':')[1].trim();
 };
-(async () => {
-  console.log(await getScheduleValidity());
-})();
 
 module.exports = { getAllMajors, getScheduleByMajorId, getScheduleValidity };
