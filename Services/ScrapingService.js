@@ -128,13 +128,16 @@ const getScheduleValidity = async () => {
   );
   const $ = cheerio.load(htmlPage);
   // schedule validity example : à partir de: 19-10-2021
-  return $(
+  const scheduleValidity = $(
     'body > div.wrapper > div > div > div > div.row > article > div > center:nth-child(1) > table > tbody > tr:nth-child(1) > td > center > h5'
   )
     .text()
-    .trim()
-    .split(':')[1]
     .trim();
+  console.log('schedule validity', scheduleValidity);
+  return scheduleValidity.split(':')[1].trim();
 };
+(async () => {
+  console.log(await getScheduleValidity());
+})();
 
 module.exports = { getAllMajors, getScheduleByMajorId, getScheduleValidity };
