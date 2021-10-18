@@ -1,31 +1,57 @@
-const express = require('express')
- 
-const { updateAllMajorsSchedule } = require("../Services/SchedulesService");
-const {Major}  =require("../Models/Major")
+const express = require('express');
 
-const router = express.Router()
+const {
+  updateAllMajorsSchedule,
+  isScheduleUpdated,
+} = require('../Services/SchedulesService');
+const { Major } = require('../Models/Major');
 
-router.get('/:id',async (req, res)=> {
-    const major = await Major.findOne({majorId: req.params.id}, '-_id schedule');
-    if(!major) {
-        res.status(404).json({status: "failure", message:"major not found"})
-    }
-    res.send(major);
-})
+const router = express.Router();
 
 router.get('', async (req, res) => {
-    res.json(await Major.find().select({majorId : 1,label:1}))
-})
-
-router.patch("/scrape-majors-schedule", (async (req,res) => {
   try {
-      await updateAllMajorsSchedule()
-      res.status(200)
-  } catch (e) {
-      console.log(e.message)
-      res.status(500)
+    res.status(200).json(await Major.find().select({ majorId: 1, label: 1 }));
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: 'server error' });
   }
-}
-))
+});
 
-module.exports=router
+router.get('/is-updated', async (req, res) => {
+  try {
+    const isUpdated = await isScheduleUpdated();
+    res.status(200).send({ isUpdated });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({ error: 'server error' });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const major = await Major.findOne(
+      { majorId: req.params.id },
+      '-_id schedule'
+    );
+    if (!major) {
+      res.status(404).json({ status: 'failure', message: 'major not found' });
+    }
+    res.send(major);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: 'server error' });
+  }
+});
+
+router.patch('/scrape-majors-schedule', async (req, res) => {
+  try {
+    await updateAllMajorsSchedule();
+    console.log('schedules updated.');
+    res.status(200);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500);
+  }
+});
+
+module.exports = router;
