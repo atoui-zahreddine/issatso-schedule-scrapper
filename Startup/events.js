@@ -9,12 +9,9 @@ const {
 module.exports = async () => {
   scheduler.scheduleJob(config.get('SCRAPING_CRON'), async function () {
     try {
-      const isScheduleUpdated = await isScheduleUpdated();
-      if (isScheduleUpdated) {
-        console.log('updating schedules ... ');
-        await updateAllMajorsSchedule();
-        console.log('schedules updated.');
-      }
+      console.log('updating schedules ... ');
+      await updateAllMajorsSchedule();
+      console.log('schedules updated.');
     } catch (error) {
       console.log(error);
     }

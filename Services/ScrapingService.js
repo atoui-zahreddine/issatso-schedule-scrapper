@@ -74,14 +74,30 @@ function parseExtractedDataToJson(schedule) {
   let subGroup = '1';
   let day = '';
   const refactoredSchedule = { 1: {}, 2: {} };
+
+  let initializedSessions = [];
   schedule.shift();
   schedule.forEach((row) => {
     if (row[0].match(/.*-.*-2/)) {
       subGroup = '2';
+      refactoredSchedule[subGroup] = JSON.parse(
+        JSON.stringify(refactoredSchedule['1'])
+      );
     } else if (row[0].match(/^[123456]-/)) {
       day = row[0];
-      refactoredSchedule[subGroup][day] = {};
+      if (subGroup === '1') refactoredSchedule[subGroup][day] = {};
     } else {
+      const isSessionEmpty = !refactoredSchedule[subGroup][day][row[0]];
+
+      if (
+        isSessionEmpty ||
+        (subGroup === '2' && !initializedSessions.includes(row[0] + day))
+      ) {
+        refactoredSchedule[subGroup][day][row[0]] = [];
+        if (subGroup === '2') {
+          initializedSessions.push(row[0] + day);
+        }
+      }
       let session = {
         start: row[1],
         end: row[2],
@@ -90,7 +106,7 @@ function parseExtractedDataToJson(schedule) {
         classroom: row[5],
         regime: row[6],
       };
-      refactoredSchedule[subGroup][day][row[0]] = session;
+      refactoredSchedule[subGroup][day][row[0]].push(session);
     }
   });
   return refactoredSchedule;

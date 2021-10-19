@@ -1,3 +1,4 @@
+const fs = require('fs/promises');
 const { Major } = require('../Models/Major');
 
 const { sleep } = require('../Utils');
@@ -11,9 +12,6 @@ async function saveAllMajorsSchedule() {
   try {
     let majors = await getAllMajors();
 
-    const [day, month, year] = await (await getScheduleValidity()).split('-');
-    const validFrom = new Date([month, +day + 1, year].join(' '));
-
     for (let major of majors) {
       try {
         const schedule = await getScheduleByMajorId(major.id);
@@ -22,7 +20,6 @@ async function saveAllMajorsSchedule() {
           schedule,
           label: major.label,
           updatedOn: new Date(),
-          validFrom,
         });
         await newMajor.save();
         console.log(`major ${major.label} saved successfully .`);
@@ -40,9 +37,6 @@ async function updateAllMajorsSchedule() {
   try {
     let majors = await getAllMajors();
 
-    const [day, month, year] = await (await getScheduleValidity()).split('-');
-    const validFrom = new Date([month, +day + 1, year].join(' '));
-
     for (let major of majors) {
       try {
         const schedule = await getScheduleByMajorId(major.id);
@@ -53,7 +47,6 @@ async function updateAllMajorsSchedule() {
               schedule,
               label: major.label,
               updatedOn: new Date(),
-              validFrom,
             },
           },
           { upsert: true, useFindAndModify: false }
