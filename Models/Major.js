@@ -7,6 +7,5 @@ exports.Major = mongoose.model(
     label: { type: String, required: true },
     schedule: { type: Object, required: true },
     updatedOn: { type: Date, required: true, default: Date.now },
-    validFrom: { type: Date, required: true },
   })
 );
