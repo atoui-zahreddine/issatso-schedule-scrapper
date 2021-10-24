@@ -1,12 +1,12 @@
-const fs = require('fs/promises');
-const { Major } = require('../Models/Major');
+const fs = require("fs/promises");
+const { Major } = require("../Models/Major");
 
-const { sleep } = require('../Utils');
+const { sleep } = require("../Utils");
 const {
   getAllMajors,
   getScheduleByMajorId,
   getScheduleValidity,
-} = require('./ScrapingService');
+} = require("./ScrapingService");
 
 async function saveAllMajorsSchedule() {
   try {
@@ -29,15 +29,15 @@ async function saveAllMajorsSchedule() {
         console.log(`error while saving ${major.label} to db !!! ${e.message}`);
       }
     }
-    console.log("saving schedules started ...")
+    console.log("saving schedules started ...");
   } catch (e) {
-    console.log('error whiles saving majors :', e);
+    console.log("error whiles saving majors :", e);
   }
 }
 
 async function updateAllMajorsSchedule() {
   try {
-    console.log("updating schedules started ...")
+    console.log("updating schedules started ...");
     let majors = await getAllMajors();
 
     for (let major of majors) {
@@ -62,18 +62,18 @@ async function updateAllMajorsSchedule() {
     }
     console.log("updating schedules finished...");
   } catch (e) {
-    console.log('error whiles updating majors :', e);
+    console.log("error whiles updating majors :", e);
   }
 }
 
 const isScheduleUpdated = async () => {
   const { updatedOn } = await Major.findOne(
-    { majorId: 'MXZhMDMwMDg=' },
-    '-_id updatedOn'
+    { majorId: "MXZhMDMwMDg=" },
+    "-_id updatedOn"
   );
-  const [day, month, year] = await (await getScheduleValidity()).split('-');
+  const [day, month, year] = await (await getScheduleValidity()).split("-");
 
-  const scheduleValidFrom = new Date([month, +day + 1, year].join(' '));
+  const scheduleValidFrom = new Date([month, +day + 1, year].join(" "));
   return scheduleValidFrom > updatedOn;
 };
 
