@@ -10,6 +10,7 @@ const {
 
 async function saveAllMajorsSchedule() {
   try {
+    console.log("saving schedules started ...");
     let majors = await getAllMajors();
 
     for (let major of majors) {
@@ -28,6 +29,7 @@ async function saveAllMajorsSchedule() {
         console.log(`error while saving ${major.label} to db !!! ${e.message}`);
       }
     }
+    console.log("saving schedules started ...")
   } catch (e) {
     console.log('error whiles saving majors :', e);
   }
@@ -35,6 +37,7 @@ async function saveAllMajorsSchedule() {
 
 async function updateAllMajorsSchedule() {
   try {
+    console.log("updating schedules started ...")
     let majors = await getAllMajors();
 
     for (let major of majors) {
@@ -57,6 +60,7 @@ async function updateAllMajorsSchedule() {
         console.log(`error while saving ${major.label} to db !!! ${e.message}`);
       }
     }
+    console.log("updating schedules finished...");
   } catch (e) {
     console.log('error whiles updating majors :', e);
   }

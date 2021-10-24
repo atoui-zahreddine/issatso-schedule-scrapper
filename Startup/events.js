@@ -7,11 +7,10 @@ const {
 } = require('../Services/SchedulesService');
 
 module.exports = async () => {
+  console.log("SCRAPING day :",config.get('SCRAPING_CRON'));
   scheduler.scheduleJob(config.get('SCRAPING_CRON'), async function () {
     try {
-      console.log('updating schedules ... ');
       await updateAllMajorsSchedule();
-      console.log('schedules updated.');
     } catch (error) {
       console.log(error);
     }
