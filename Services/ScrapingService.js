@@ -63,6 +63,7 @@ function extractScheduleFromThePage(html) {
     result.push(row);
   });
   result.shift();
+  result.pop();
   return result;
 }
 
@@ -94,6 +95,7 @@ function parseExtractedDataToJson(schedule) {
           initializedSessions.push(row[1] + day);
         }
       }
+
       let session = {
         start: row[2],
         end: row[3],
@@ -102,6 +104,33 @@ function parseExtractedDataToJson(schedule) {
         classroom: row[6],
         regime: row[7],
       };
+
+      if (subGroup === "2" && session.regime === "H") {
+
+        Object.keys(refactoredSchedule["1"][day]).forEach((key) => {
+          const firstGroupSession = refactoredSchedule["1"][day][key];
+          if (refactoredSchedule[subGroup][day][key]) {
+            firstGroupSession.forEach((element, index) => {
+              if (
+                element.desc === session.desc &&
+                element.type === session.type &&
+                  +[...row[1]][1] !== +[...key][1]-1 &&
+                refactoredSchedule[subGroup][day][key].length > 0 &&
+                !initializedSessions.includes(key + day)
+              ) {
+                refactoredSchedule[subGroup][day][key].splice(index, 1);
+              }
+            });
+            if (
+              refactoredSchedule[subGroup][day][key].length === 0 &&
+              !initializedSessions.includes(key + day) && !initializedSessions.includes(row[0] + day)
+            ) {
+              delete refactoredSchedule[subGroup][day][key];
+            }
+          }
+        });
+      }
+
       refactoredSchedule[subGroup][day][row[1]].push(session);
     }
   });
@@ -109,13 +138,9 @@ function parseExtractedDataToJson(schedule) {
 }
 
 const getScheduleByMajorId = async function (majorId) {
-  try {
-    const html = await getMajorScheduleHtmlPage(majorId);
-    const extractedSchedule = extractScheduleFromThePage(html);
-    return parseExtractedDataToJson(extractedSchedule);
-  } catch (e) {
-    throw new Error(e.message);
-  }
+  const html = await getMajorScheduleHtmlPage(majorId);
+  const extractedSchedule = extractScheduleFromThePage(html);
+  return parseExtractedDataToJson(extractedSchedule);
 };
 
 const getAllMajors = async function () {
