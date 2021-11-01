@@ -1,4 +1,3 @@
-const fs = require("fs/promises");
 const { Major } = require("../Models/Major");
 
 const { sleep } = require("../Utils");
@@ -71,7 +70,7 @@ const isScheduleUpdated = async () => {
     { majorId: "MXZhMDMwMDg=" },
     "-_id updatedOn"
   );
-  const [day, month, year] = await (await getScheduleValidity()).split("-");
+  const [day, month, year] = (await getScheduleValidity()).split("-");
 
   const scheduleValidFrom = new Date([month, +day + 1, year].join(" "));
   return scheduleValidFrom > updatedOn;
