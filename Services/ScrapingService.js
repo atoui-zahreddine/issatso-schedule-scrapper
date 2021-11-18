@@ -181,7 +181,7 @@ const getScheduleValidity = async () => {
     "body > div.wrapper > div > div > div > div.row > article > div > center:nth-child(1) > table > tbody > tr:nth-child(1) > td > center > h5"
   ).text();
 
-  return htmlPage;
+  return scheduleValidity;
 };
 
 module.exports = { getAllMajors, getScheduleByMajorId, getScheduleValidity };
