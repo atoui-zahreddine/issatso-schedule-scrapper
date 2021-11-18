@@ -175,12 +175,12 @@ const getScheduleValidity = async () => {
   const { htmlPage } = await loadHtml(
     "http://www.issatso.rnu.tn/fo/emplois/emploi_groupe.php"
   );
-  const $ = cheerio.load(htmlPage);
-  // schedule validity example : à partir de: 19-10-2021
-  const scheduleValidity = $(
-    "body > div.wrapper > div > div > div > div.row > article > div > center:nth-child(1) > table > tbody > tr:nth-child(1) > td > center > h5"
-  );
-  console.log(scheduleValidity);
+  // const $ = cheerio.load(htmlPage);
+  // // schedule validity example : à partir de: 19-10-2021
+  // const scheduleValidity = $(
+  //   "body > div.wrapper > div > div > div > div.row > article > div > center:nth-child(1) > table > tbody > tr:nth-child(1) > td > center > h5"
+  // );
+  const scheduleValidity = htmlPage.match(/.*à partir de:.*<img/)[0];
   return scheduleValidity;
 };
 

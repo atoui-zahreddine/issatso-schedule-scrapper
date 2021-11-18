@@ -38,7 +38,7 @@ router.get("/:id", async (req, res) => {
     if (!schedule) {
       res.status(404).json({ status: "failure", message: "major not found" });
     }
-    res.status(200).json(schedule);
+    res.status(200).json({ schedule });
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: "server error" });
