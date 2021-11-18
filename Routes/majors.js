@@ -4,7 +4,7 @@ const {
   updateAllMajorsSchedule,
   isScheduleUpdated,
 } = require("../Services/SchedulesService");
-const { getScheduleValidity } = require("../Services/ScrapingService");
+
 const { Major } = require("../Models/Major");
 
 const router = express.Router();
@@ -21,7 +21,7 @@ router.get("", async (req, res) => {
 
 router.get("/is-updated", async (req, res) => {
   try {
-    const isUpdated = await getScheduleValidity();
+    const isUpdated = await isScheduleUpdated();
     res.status(200).send({ isUpdated });
   } catch (error) {
     console.log(error.message);
