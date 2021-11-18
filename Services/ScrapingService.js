@@ -179,7 +179,7 @@ const getScheduleValidity = async () => {
   // schedule validity example : à partir de: 19-10-2021
   const scheduleValidity = $(
     "body > div.wrapper > div > div > div > div.row > article > div > center:nth-child(1) > table > tbody > tr:nth-child(1) > td > center > h5"
-  ).text();
+  );
   console.log(scheduleValidity);
   return scheduleValidity;
 };
