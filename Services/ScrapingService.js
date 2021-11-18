@@ -180,7 +180,7 @@ const getScheduleValidity = async () => {
   const scheduleValidity = $(
     "body > div.wrapper > div > div > div > div.row > article > div > center:nth-child(1) > table > tbody > tr:nth-child(1) > td > center > h5"
   ).text();
-
+  console.log(scheduleValidity);
   return scheduleValidity;
 };
 
