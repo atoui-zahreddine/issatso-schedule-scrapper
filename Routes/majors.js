@@ -31,14 +31,14 @@ router.get("/is-updated", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const { schedule } = await Major.findOne(
+    const { schedule, updatedOn } = await Major.findOne(
       { majorId: req.params.id },
-      "-_id schedule"
+      "-_id schedule updatedOn"
     );
     if (!schedule) {
       res.status(404).json({ status: "failure", message: "major not found" });
     }
-    res.status(200).json({ schedule });
+    res.status(200).json({ schedule, updatedOn });
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: "server error" });
