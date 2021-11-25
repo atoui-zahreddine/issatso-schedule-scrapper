@@ -1,11 +1,7 @@
 const { Major } = require("../Models/Major");
 
-const { sleep } = require("../Utils");
-const {
-  getAllMajors,
-  getScheduleByMajorId,
-  getScheduleValidity,
-} = require("./ScrapingService");
+const { sleep, sentryLog, SeverityTypes } = require("../Utils");
+const { getAllMajors, getScheduleByMajorId } = require("./ScrapingService");
 
 async function saveAllMajorsSchedule() {
   try {
@@ -25,12 +21,15 @@ async function saveAllMajorsSchedule() {
         console.log(`major ${major.label} saved successfully .`);
         await sleep(1000);
       } catch (e) {
-        console.log(`error while saving ${major.label} to db !!! ${e.message}`);
+        sentryLog(
+          `error while saving ${major.label} to db !!! ${e.message}`,
+          SeverityTypes.Error
+        );
       }
     }
     console.log("saving schedules started ...");
   } catch (e) {
-    console.log("error whiles saving majors :", e);
+    sentryLog(`error whiles updating majors :`, SeverityTypes.Error);
   }
 }
 
@@ -56,28 +55,19 @@ async function updateAllMajorsSchedule() {
         console.log(`major ${major.label} saved successfully .`);
         await sleep(1000);
       } catch (e) {
-        console.log(`error while saving ${major.label} to db !!! ${e.message}`);
+        sentryLog(
+          `error while saving ${major.label} to db !!! ${e.message}`,
+          SeverityTypes.Error
+        );
       }
     }
     console.log("updating schedules finished...");
   } catch (e) {
-    console.log("error whiles updating majors :", e);
+    sentryLog(`error whiles updating majors :`, SeverityTypes.Error);
   }
 }
-
-const isScheduleUpdated = async () => {
-  const { updatedOn } = await Major.findOne(
-    { majorId: "MXZhMDMwMDg=" },
-    "-_id updatedOn"
-  );
-  const [day, month, year] = (await getScheduleValidity()).split("-");
-
-  const scheduleValidFrom = new Date([month, +day + 1, year].join(" "));
-  return scheduleValidFrom > updatedOn;
-};
 
 module.exports = {
   updateAllMajorsSchedule,
   saveAllMajorsSchedule,
-  isScheduleUpdated,
 };

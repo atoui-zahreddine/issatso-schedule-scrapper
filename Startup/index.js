@@ -3,4 +3,5 @@ module.exports = (app) => {
   require("./db")();
   require("./seed")();
   require("./events")();
+  require("./sentry")(app);
 };

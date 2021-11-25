@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^6.15.0",
+    "@sentry/tracing": "^6.15.0",
     "axios": "^0.21.1",
     "cheerio": "*",
     "config": "^3.3.6",

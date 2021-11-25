@@ -1,12 +1,14 @@
-const  express =  require('express');
+const express = require("express");
 
-const majorsRoute = require('./Routes/majors')
-const port = process.env.PORT || 3000
+const majorsRoute = require("./Routes/majors");
+const port = process.env.PORT || 3000;
 
-const app = express()
+const app = express();
 
-require("./Startup")(app)
+require("./Startup")(app);
 
-app.use('/api/v1/majors',majorsRoute)
+app.use("/api/v1/majors", majorsRoute);
 
-app.listen(port,() => console.log(`listening on port ${port}`))
+require("./Middleware/sentry")(app);
+
+app.listen(port, () => console.log(`listening on port ${port}`));
