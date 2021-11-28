@@ -40,7 +40,7 @@ router.get("/:id", async (req, res) => {
 
 router.patch("/scrape-majors-schedule", async (req, res) => {
   try {
-    res.status(200);
+    res.status(200).json({ status: "ok" }).end();
     await updateAllMajorsSchedule();
   } catch (e) {
     sentryLog(e.message, SeverityTypes.Error);
