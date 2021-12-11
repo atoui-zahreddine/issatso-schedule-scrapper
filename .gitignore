@@ -9,7 +9,8 @@ lerna-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-
+/vscode
+.vscode/*
 # Runtime data
 pids
 *.pid
@@ -192,4 +193,5 @@ fabric.properties
 issatso-schedule-scrapper.iml
 .idea/
 package-lock.json
-db-majors
+db-majors!/
+.vscode/
