@@ -18,6 +18,22 @@ router.get("", async (req, res) => {
   }
 });
 
+router.get("/session-available", async (req, res) => {
+  try {
+    const { day, session, classrooms } = req.body;
+    const majors = await Major.find(
+      {
+        [`schedule.1.${day}.${session}.0.classroom`]: { $in: classrooms },
+      },
+      `-_id label schedule.1.${day}.${session}`
+    );
+    res.status(200).json(majors);
+  } catch (error) {
+    sentryLog(error, SeverityTypes.Error);
+    res.status(500).send({ error: "server error" });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const major = await Major.findOne(
