@@ -1,11 +1,11 @@
-const scheduler = require("node-schedule");
-const config = require("config");
+const scheduler = require('node-schedule');
+const config = require('config');
 
-const { updateAllMajorsSchedule } = require("../Services/SchedulesService");
+const { updateAllMajorsSchedule } = require('../Services/SchedulesService');
 
 module.exports = async () => {
-  console.log("SCRAPING day :", config.get("SCRAPING_CRON"));
-  scheduler.scheduleJob(config.get("SCRAPING_CRON"), async function () {
+  console.log('SCRAPING day :', config.get('SCRAPING_CRON'));
+  scheduler.scheduleJob(config.get('SCRAPING_CRON'), async function () {
     try {
       await updateAllMajorsSchedule();
     } catch (error) {

@@ -1,30 +1,30 @@
 module.exports.sleep = function (ms) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(resolve, ms);
   });
 };
 
 module.exports.sentryLog = function (e, severity) {
-  const Sentry = require("@sentry/node");
+  const Sentry = require('@sentry/node');
   Sentry.captureMessage(e, {
-    level: severity,
+    level: severity
   });
   console.log(e.message || e);
 };
 
 module.exports.SeverityTypes = {
   /** JSDoc */
-  Fatal: "fatal",
+  Fatal: 'fatal',
   /** JSDoc */
-  Error: "error",
+  Error: 'error',
   /** JSDoc */
-  Warning: "warning",
+  Warning: 'warning',
   /** JSDoc */
-  Log: "log",
+  Log: 'log',
   /** JSDoc */
-  Info: "info",
+  Info: 'info',
   /** JSDoc */
-  Debug: "debug",
+  Debug: 'debug',
   /** JSDoc */
-  Critical: "critical",
+  Critical: 'critical'
 };

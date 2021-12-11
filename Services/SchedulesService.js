@@ -1,11 +1,11 @@
-const { Major } = require("../Models/Major");
+const { Major } = require('../Models/Major');
 
-const { sleep, sentryLog, SeverityTypes } = require("../Utils");
-const { getAllMajors, getScheduleByMajorId } = require("./ScrapingService");
+const { sleep, sentryLog, SeverityTypes } = require('../Utils');
+const { getAllMajors, getScheduleByMajorId } = require('./ScrapingService');
 
 async function saveAllMajorsSchedule() {
   try {
-    console.log("saving schedules started ...");
+    console.log('saving schedules started ...');
     let majors = await getAllMajors();
 
     for (let major of majors) {
@@ -27,7 +27,7 @@ async function saveAllMajorsSchedule() {
         );
       }
     }
-    console.log("saving schedules started ...");
+    console.log('saving schedules started ...');
   } catch (e) {
     sentryLog(`error whiles updating majors :`, SeverityTypes.Error);
   }
@@ -35,7 +35,7 @@ async function saveAllMajorsSchedule() {
 
 async function updateAllMajorsSchedule() {
   try {
-    console.log("updating schedules started ...");
+    console.log('updating schedules started ...');
     let majors = await getAllMajors();
 
     for (let major of majors) {
@@ -52,7 +52,14 @@ async function updateAllMajorsSchedule() {
           },
           { upsert: true, useFindAndModify: false }
         );
-        console.log(`major ${major.label} saved successfully .`);
+        if (
+          (schedule[1]['4-Jeudi']['S5'] &&
+            schedule[1]['4-Jeudi']['S5'][0].type === 'TP') ||
+          (schedule[1]['4-Jeudi']['S4'] &&
+            schedule[1]['4-Jeudi']['S4'][0].type === 'TP')
+        )
+          console.log(major.label, schedule[1]['4-Jeudi']['S5']);
+        //console.log(`major ${major.label} saved successfully .`);
         await sleep(1000);
       } catch (e) {
         sentryLog(
@@ -61,8 +68,9 @@ async function updateAllMajorsSchedule() {
         );
       }
     }
-    console.log("updating schedules finished...");
+    console.log('updating schedules finished...');
   } catch (e) {
+    console.log(e);
     sentryLog(`error whiles updating majors :`, SeverityTypes.Error);
   }
 }
