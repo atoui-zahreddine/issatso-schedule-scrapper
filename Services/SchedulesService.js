@@ -15,16 +15,13 @@ async function saveAllMajorsSchedule() {
           majorId: major.id,
           schedule,
           label: major.label,
-          updatedOn: new Date(),
+          updatedOn: new Date()
         });
         await newMajor.save();
         console.log(`major ${major.label} saved successfully .`);
         await sleep(1000);
       } catch (e) {
-        sentryLog(
-          `error while saving ${major.label} to db !!! ${e.message}`,
-          SeverityTypes.Error
-        );
+        sentryLog(`error while saving ${major.label} to db !!! ${e.message}`, SeverityTypes.Error);
       }
     }
     console.log('saving schedules started ...');
@@ -47,25 +44,16 @@ async function updateAllMajorsSchedule() {
             $set: {
               schedule,
               label: major.label,
-              updatedOn: new Date(),
-            },
+              updatedOn: new Date()
+            }
           },
           { upsert: true, useFindAndModify: false }
         );
-        if (
-          (schedule[1]['4-Jeudi']['S5'] &&
-            schedule[1]['4-Jeudi']['S5'][0].type === 'TP') ||
-          (schedule[1]['4-Jeudi']['S4'] &&
-            schedule[1]['4-Jeudi']['S4'][0].type === 'TP')
-        )
-          console.log(major.label, schedule[1]['4-Jeudi']['S5']);
-        //console.log(`major ${major.label} saved successfully .`);
+
+        console.log(`major ${major.label} saved successfully .`);
         await sleep(1000);
       } catch (e) {
-        sentryLog(
-          `error while saving ${major.label} to db !!! ${e.message}`,
-          SeverityTypes.Error
-        );
+        sentryLog(`error while saving ${major.label} to db !!! ${e.message}`, SeverityTypes.Error);
       }
     }
     console.log('updating schedules finished...');
@@ -77,5 +65,5 @@ async function updateAllMajorsSchedule() {
 
 module.exports = {
   updateAllMajorsSchedule,
-  saveAllMajorsSchedule,
+  saveAllMajorsSchedule
 };
