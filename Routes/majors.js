@@ -30,6 +30,7 @@ router.get('/parralel-session', async (req, res) => {
         await Major.find({ label: { $regex: `^${majorPrefix}` } }, `-_id label schedule`)
       )
     );
+
     let parralleSessions = [];
     result.forEach(m => {
       if (m.label !== major) {
@@ -52,7 +53,7 @@ router.get('/session-available', async (req, res) => {
       {
         [`schedule.1.${day}.${session}.0.classroom`]: { $in: classrooms }
       },
-      `-_id label schedule.1.${day}.${session}`
+      `-_id label`
     );
     res.status(200).json(majors);
   } catch (error) {
