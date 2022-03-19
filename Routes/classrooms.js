@@ -24,4 +24,29 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get("/classroom-schedule", async(req, res)=>{
+  const {classroom} = req.body;
+  const sessions = ["S1","S2","S3","S4","S5","S6"];
+  const days =  ['1-Lundi','2-Mardi','3-Mercredi','4-Jeudi','5-Vendredi','6-Samedi'];
+  const myObj = Object.fromEntries(days.map(key => [key, {}]));
+
+
+
+  for(var day of days){
+    console.log(`===${day}===`)
+    for(var session of sessions){
+      console.log(`==${session}==`)
+       const majorLabel = await Major.find(
+        {
+          [`schedule.1.${day}.${session}.0.classroom`]: { $in: classroom }
+        },
+        `-_id label`
+      );
+      myObj[day][session] = majorLabel[0]
+    }
+  }
+  res.status(200).json(myObj)
+})
+
 module.exports = router;
+ 
