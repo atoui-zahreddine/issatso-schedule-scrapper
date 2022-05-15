@@ -18,6 +18,34 @@ router.get('', async (req, res) => {
   }
 });
 
+router.get('/parralel-session', async (req, res) => {
+  try {
+    const { major, session, day } = req.body;
+    const majorLabel = major.split('-');
+    majorLabel.pop();
+    const majorPrefix = majorLabel.join('-');
+
+    const result = JSON.parse(
+      JSON.stringify(
+        await Major.find({ label: { $regex: `^${majorPrefix}` } }, `-_id label schedule`)
+      )
+    );
+
+    let parralleSessions = [];
+    result.forEach(m => {
+      if (m.label !== major) {
+        const parralelSession = m?.schedule ? m.schedule['1'][day][session] : [];
+
+        parralleSessions.push({ label: m.label, parralelSession });
+      }
+    });
+    res.status(200).json(parralleSessions);
+  } catch (ex) {
+    sentryLog(ex, SeverityTypes.Error);
+    res.status(500).json({ error: 'server error' }).end();
+  }
+});
+
 router.get('/session-available', async (req, res) => {
   try {
     const { day, session, classrooms } = req.body;
@@ -25,7 +53,7 @@ router.get('/session-available', async (req, res) => {
       {
         [`schedule.1.${day}.${session}.0.classroom`]: { $in: classrooms }
       },
-      `-_id label schedule.1.${day}.${session}`
+      `-_id label`
     );
     res.status(200).json(majors);
   } catch (error) {
